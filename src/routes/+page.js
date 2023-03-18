@@ -1,3 +1,14 @@
-// since there's no dynamic data here, we can prerender
-// it so that it gets served as a static asset in production
-export const prerender = true;
+import { error } from "@sveltejs/kit";
+import { upcomingEvents } from "$lib/store.js";
+
+export async function load({ fetch }) {
+  const res = await fetch(`https://teatr.bullbulk.ru/api/infostand/upcoming/`);
+  if (res.status > 400) {
+    throw error(res.status, await res.text());
+  }
+
+  let data = await res.json();
+  console.log(data);
+
+  upcomingEvents.set(data.values);
+}

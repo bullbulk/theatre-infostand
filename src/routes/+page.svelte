@@ -1,78 +1,15 @@
 <script>
-  import afisha from "$lib/images/afisha.jpg";
+  import { upcomingEvents } from "$lib/store.js";
+  import { get } from "svelte/store";
 
-  $: events = [
-    {
-      author: "Ярослава Пулинович",
-      title: "Свой путь",
-      date: "18 марта, 19:00",
-      genre: "Лирическая трагикомедия в двух действиях"
-    },
-    {
-      author: "Карел Чапек",
-      title: "Настоящий детектив",
-      date: "19 марта, 18:00",
-      genre: "Кабаре-ревю в двух действиях"
-    },
-    {
-      author: "Антон Чехов",
-      title: "Супруга",
-      date: "24 марта, 19:00",
-      genre: "История одного \"развода\" в одном действии"
-    },
-    {
-      author: "Уильям Шекспир",
-      title: "Король Лир",
-      date: "25 марта, 19:00",
-      genre: "Шутовская трагедия в двух действиях"
-    },
-    {
-      author: "Уильям Шекспир",
-      title: "Король Лир",
-      date: "26 марта, 18:00",
-      genre: "Шутовская трагедия в двух действиях"
-    },
-    {
-      author: "Нил Саймон",
-      title: "Дураки",
-      date: "30 марта, 19:00",
-      genre: "Комедия в двух действиях"
-    },
-    {
-      author: "Николай Гоголь",
-      title: "Ревизор",
-      date: "31 марта, 19:00",
-      genre: "Нефантастическая комедия в двух действиях"
-    },
-    {
-      author: "Николай Гоголь",
-      title: "Ревизор",
-      date: "1 апреля, 18:00",
-      genre: "Нефантастическая комедия в двух действиях"
-    },
-    {
-      author: "Аскар Галимов",
-      title: "Ёжикина скрипка",
-      date: "2 апреля, 11:00",
-      genre: "Спектакль для семейного просмотра по сказкам Сергея Козлова"
-    },
-    {
-      author: "Александр Островский",
-      title: "Пароход \"Островский\"",
-      date: "2 апреля, 11:00",
-      genre: "Спектакль для семейного просмотра по сказкам Сергея Козлова"
-    },
-    {
-      author: "Александр Островский",
-      title: "Кошка, которая гуляла сама по себе",
-      date: "2 апреля, 11:00",
-      genre: "Спектакль для семейного просмотра по сказкам Сергея Козлова"
-    }
-  ];
   $: selected = 0;
+  $: currentEvent = get(upcomingEvents)[0];
 
+  console.log(upcomingEvents);
+  console.log(currentEvent)
   const setSelected = (index) => {
     selected = index;
+    currentEvent = get(upcomingEvents)[index];
   };
 </script>
 
@@ -86,16 +23,16 @@
   <div id="events-info">
     <div id="upcoming-events">
       <div class="afisha-img">
-        <img src="{afisha}" alt="Afisha">
+        <img src="{currentEvent.event.image}" alt="Afisha">
       </div>
       <div class="schedule">
-        {#each events as event, i}
+        {#each $upcomingEvents as event, i}
           <div class="relative" on:keydown={() => {setSelected(i)}} on:click={() => {setSelected(i)}}>
             <div class="shadow-overlay {i === selected ? 'active' : ''}">
             </div>
             <div class="row">
-              <div class="author">{event.author}</div>
-              <div class="title">{event.title}</div>
+              <div class="author">{event.event.author}</div>
+              <div class="title">{event.event.title}</div>
               <div class="date">{event.date}</div>
               <hr>
             </div>
@@ -105,9 +42,9 @@
     </div>
     <div class="event-info">
       <div class="info-text">
-        <div class="author">{events[selected].author}</div>
-        <div class="title">{events[selected].title}</div>
-        <div class="genre">{events[selected].genre}</div>
+        <div class="author">{currentEvent.event.author}</div>
+        <div class="title">{currentEvent.event.title}</div>
+        <div class="genre">{currentEvent.event.genre}</div>
       </div>
       <div></div>
     </div>
@@ -117,6 +54,7 @@
 <style lang="scss">
   #upcoming-events {
     height: 56rem;
+    grid-template-columns: 4fr 1fr;
     @apply grid grid-flow-col mb-6;
   }
 
