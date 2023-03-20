@@ -1,7 +1,7 @@
 <script>
   import { dataFetcher, eventsData } from "$lib/store.js";
   import { loadData } from "$lib/utils.js";
-  import { fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import { preloadImage } from "./preload.js";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
@@ -62,7 +62,7 @@
   <div id="events-info">
     <div id="upcoming-events">
       {#key currentEvent.image}
-        <div in:fly class="afisha-img">
+        <div in:fade class="afisha-img">
           {#if currentEvent !== undefined}
             <img loading="lazy" src="{currentEvent.image}" alt="Afisha">
           {/if}
@@ -89,7 +89,7 @@
     {#key currentEvent.title}
       {#if currentEvent !== undefined}
         <div class="event-info">
-          <div in:fly class="info-text container">
+          <div in:fade class="info-text container">
             <div class="author">{currentEvent.author}</div>
             <div class="title">{currentEvent.title}</div>
             <div class="genre">{currentEvent.genre}</div>
@@ -101,7 +101,7 @@
             </div>
           </div>
           <hr class="vertical">
-          <div in:fly class="grid-auto-cols container">
+          <div in:fade class="grid-auto-cols container">
             <div class="additional-info pl-3">
               <div><b>Дата, время:</b> {currentDate.date}, {currentDate.time}</div>
               <div><b>Зал:</b> {currentEvent.hall.name}</div>
