@@ -1,11 +1,11 @@
-import { upcomingEvents, upcomingEventsHash } from "$lib/store.js";
+import { eventsData } from "$lib/store.js";
 import { get } from "svelte/store";
 
 
-export async function loadEvents(fetch = fetch) {
+export const loadData = async (fetch = fetch) => {
   let res, error;
   try {
-    res = await fetch(`https://teatr.bullbulk.ru/api/infostand/upcoming/`).catch(() => error = true);
+    res = await fetch(`https://teatr.bullbulk.ru/api/infostand/`).catch(() => error = true);
   } catch {
     error = true;
   }
@@ -16,13 +16,14 @@ export async function loadEvents(fetch = fetch) {
   }
 
   if (res.status > 400) {
-    throw error(res.status, await res.text());
+    console.log(res.status, await res.text());
+    return;
   }
 
   let data = await res.json();
 
-  if (get(upcomingEventsHash) !== data.hash) {
-    upcomingEvents.set(data.values);
-    upcomingEventsHash.set(data.hash);
+  if (get(eventsData).hash !== data.hash) {
+    eventsData.set(data);
   }
-}
+};
+

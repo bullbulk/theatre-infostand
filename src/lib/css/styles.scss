@@ -83,8 +83,27 @@ section {
 hr {
   width: 100%;
   color: #E0E0E0;
+
+  &.divider {
+    border-top-width: 2px;
+    @apply pb-12 rounded;
+  }
+
+  &.vertical {
+    background-color: black;
+    height: 75%;
+    @apply w-1 rounded;
+  }
 }
 
 a {
   text-decoration: none;
+}
+
+.grid-auto-cols {
+  @apply grid grid-flow-col auto-cols-fr;
+}
+
+.float-rt {
+  @apply absolute top-0 right-0;
 }

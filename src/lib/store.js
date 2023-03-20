@@ -1,5 +1,8 @@
 import { writable } from "svelte/store";
 
-export const upcomingEvents = writable([]);
-export const upcomingEventsHash = writable("");
-export const upcomingEventsFetcher = writable(null);
+export const eventsData = writable({
+  hash: "",
+  events: [{ id: 0, title: "", image: "", age_limit: "0+", duration: "", hall: { name: "" } }],
+  dates: [{ date: "", time: "", event: 0 }]
+});
+export const dataFetcher = writable(null);
