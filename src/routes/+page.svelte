@@ -1,7 +1,7 @@
 <script>
   import { dataFetcher, eventsData } from "$lib/store.js";
   import { loadData } from "$lib/utils.js";
-  import { fade, slide } from "svelte/transition";
+  import { fly } from "svelte/transition";
   import { preloadImage } from "./preload.js";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
@@ -13,7 +13,7 @@
 
   if (get(dataFetcher) === null) {
     dataFetcher.set(
-      setInterval(() => loadData(fetch), 2 * 60 * 100));
+      setInterval(() => loadData(fetch), 5 * 60 * 1000));
   }
 
   $: selected = 0;
@@ -62,7 +62,7 @@
   <div id="events-info">
     <div id="upcoming-events">
       {#key currentEvent.image}
-        <div in:slide class="afisha-img">
+        <div in:fly class="afisha-img">
           {#if currentEvent !== undefined}
             <img loading="lazy" src="{currentEvent.image}" alt="Afisha">
           {/if}
@@ -74,7 +74,7 @@
           <div class="relative"
                on:keydown={() => {clickRow(i)}}
                on:click={() => {clickRow(i)}}>
-            <div class="shadow-overlay {i === selected ? 'active' : ''}">
+            <div class="shadow-overlay" class:active="{i === selected}">
             </div>
             <div class="row">
               <div class="author">{event.author}</div>
@@ -88,8 +88,8 @@
     </div>
     {#key currentEvent.title}
       {#if currentEvent !== undefined}
-        <div in:fade class="event-info">
-          <div class="info-text container">
+        <div class="event-info">
+          <div in:fly class="info-text container">
             <div class="author">{currentEvent.author}</div>
             <div class="title">{currentEvent.title}</div>
             <div class="genre">{currentEvent.genre}</div>
@@ -101,14 +101,14 @@
             </div>
           </div>
           <hr class="vertical">
-          <div class="grid-auto-cols container">
+          <div in:fly class="grid-auto-cols container">
             <div class="additional-info pl-3">
               <div><b>Дата, время:</b> {currentDate.date}, {currentDate.time}</div>
               <div><b>Зал:</b> {currentEvent.hall.name}</div>
               <div><b>Длительность:</b> {currentEvent.duration}</div>
               <div class="flex gap-2">
                 <div><b>Цена:</b> {currentEvent.price} руб.</div>
-                <img class="w-7 h-7 m-0" src="{pushkin}" alt="Pushkin">
+                <!--<img class="w-7 h-7 m-0" src="{pushkin}" alt="Pushkin">-->
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@
 
 <style lang="scss">
   #upcoming-events {
-    height: 56rem;
+    height: 60rem;
     grid-template-columns: 4fr 1fr;
     @apply grid grid-flow-col mb-6;
   }
@@ -168,7 +168,7 @@
   }
 
   .afisha-img {
-    max-height: 56rem;
+    max-height: 60rem;
     @apply flex flex-col justify-center w-full;
   }
 

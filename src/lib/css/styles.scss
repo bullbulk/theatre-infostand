@@ -18,7 +18,7 @@ html {
 
 body {
   height: 100vh;
-  @apply p-12 px-24;
+  @apply p-12 px-12;
 }
 
 section {
@@ -43,12 +43,13 @@ section {
 }
 
 .sidebar {
-  max-height: 56rem;
+  max-height: 60rem;
+  width: 19rem;
   box-shadow: 0 0 50px rgba(255, 255, 255, 1) inset;
   mask-image: linear-gradient(to top, transparent, black 15%);
 
   @apply
-  relative flex flex-col w-64 overflow-y-scroll
+  relative flex flex-col overflow-y-scroll
   [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none']
   [scrollbar-width:'none'];
 
