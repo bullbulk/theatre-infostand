@@ -1,16 +1,49 @@
 <script>
-  import { upcomingEvents } from "$lib/store.js";
+  import { upcomingEvents, upcomingEventsFetcher } from "$lib/store.js";
+  import { loadEvents } from "$lib/utils.js";
+  import { fade, slide } from "svelte/transition";
+  import { preloadImage } from "./preload.js";
+  import { onMount } from "svelte";
   import { get } from "svelte/store";
 
-  $: selected = 0;
-  $: currentEvent = get(upcomingEvents)[0];
+  if (get(upcomingEventsFetcher) === null) {
+    upcomingEventsFetcher.set(
+      setInterval(() => loadEvents(fetch), 2 * 60 * 1000));
+  }
 
-  console.log(upcomingEvents);
-  console.log(currentEvent)
-  const setSelected = (index) => {
-    selected = index;
-    currentEvent = get(upcomingEvents)[index];
+  $: selected = 0;
+  $: currentEvent = $upcomingEvents[selected] ?? { event: { title: "", image: "" } };
+
+  let autoScrollInterval;
+  const startAutoscroll = () => {
+    autoScrollInterval = setInterval(() => setSelected(selected + 1), 5 * 10000);
   };
+  const stopAutoscroll = () => {
+    clearInterval(autoScrollInterval);
+  };
+
+  const setSelected = (index) => {
+    if (selected === get(upcomingEvents).length - 1) {
+      selected = 0;
+    } else {
+      selected = index;
+    }
+  };
+
+  const clickRow = (index) => {
+    stopAutoscroll();
+    startAutoscroll();
+    setSelected(index);
+  };
+
+  onMount(() => {
+    startAutoscroll();
+    upcomingEvents.subscribe((values) => {
+      for (let i of values) {
+        preloadImage(i.event.image);
+      }
+    });
+  });
 </script>
 
 <svelte:head>
@@ -18,16 +51,22 @@
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
+<section class="pt-6">
   <hr class="pb-12">
   <div id="events-info">
     <div id="upcoming-events">
-      <div class="afisha-img">
-        <img src="{currentEvent.event.image}" alt="Afisha">
-      </div>
-      <div class="schedule">
+      {#key currentEvent.event.image}
+        <div in:slide class="afisha-img">
+          {#if currentEvent !== undefined}
+            <img loading="lazy" src="{currentEvent.event.image}" alt="Afisha">
+          {/if}
+        </div>
+      {/key}
+      <div class="sidebar">
         {#each $upcomingEvents as event, i}
-          <div class="relative" on:keydown={() => {setSelected(i)}} on:click={() => {setSelected(i)}}>
+          <div class="relative"
+               on:keydown={() => {clickRow(i)}}
+               on:click={() => {clickRow(i)}}>
             <div class="shadow-overlay {i === selected ? 'active' : ''}">
             </div>
             <div class="row">
@@ -40,14 +79,19 @@
         {/each}
       </div>
     </div>
-    <div class="event-info">
-      <div class="info-text">
-        <div class="author">{currentEvent.event.author}</div>
-        <div class="title">{currentEvent.event.title}</div>
-        <div class="genre">{currentEvent.event.genre}</div>
-      </div>
-      <div></div>
-    </div>
+    {#key currentEvent.event.title}
+      {#if currentEvent !== undefined}
+        <div in:fade class="event-info">
+          <div class="info-text">
+            <div class="author">{currentEvent.event.author}</div>
+            <div class="title">{currentEvent.event.title}</div>
+            <div class="genre">{currentEvent.event.genre}</div>
+            <div class="age-limit">16+</div>
+          </div>
+          <div></div>
+        </div>
+      {/if}
+    {/key}
   </div>
 </section>
 
@@ -67,25 +111,31 @@
     grid-template-columns: 3fr 2fr;
     @apply grid grid-flow-col justify-between;
 
-    .author {
-      color: var(--text-accent);
-      font-size: 18pt;
-      @apply font-bold;
-    }
+    .info-text {
+      @apply relative flex flex-col gap-2 my-3 mx-6;
 
-    .title {
-      font-size: 28pt;
-      font-weight: bold;
-      line-height: 1.2em;
-    }
+      .author {
+        color: var(--text-accent);
+        font-size: 18pt;
+        @apply font-bold;
+      }
 
-    .genre {
-      font-size: 14pt
-    }
-  }
+      .title {
+        font-size: 28pt;
+        font-weight: bold;
+        line-height: 1.2em;
+      }
 
-  .info-text {
-    @apply flex flex-col gap-2 py-3 px-12;
+      .genre {
+        font-size: 14pt
+      }
+
+      .age-limit {
+        font-size: 16pt;
+        border: var(--accent) 4px solid;
+        @apply absolute top-0 right-0 font-bold px-1;
+      }
+    }
   }
 
   .afisha-img {

@@ -23,6 +23,6 @@
 
 	main {
 		flex: 1;
-		@apply flex flex-col w-full pt-12 m-0 box-border;
+		@apply flex flex-col w-full pt-6 m-0 box-border;
 	}
 </style>

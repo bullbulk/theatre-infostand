@@ -8,7 +8,8 @@
   <div>
     <p><b>E-mail:</b> teatrast@list.ru</p>
     <p><b>Касса:</b> +7 (3466) 455-210</p>
-    <p><b>Отдел по работе со зрителями:</b> +7 (922) 255-16-05, +7 (3466) 561-605</p>
+    <p><b>Отдел по работе со зрителями:</b> <span>+7 (922) 255-16-05,</span>
+      <span>+7 (3466) 561-605</span></p>
   </div>
   <div class="qr-codes">
     <img src="{vk}" alt="VK QR code">
@@ -18,6 +19,10 @@
 </footer>
 
 <style>
+    span {
+        white-space: nowrap;
+    }
+
     footer {
         @apply pb-24 grid grid-flow-col auto-cols-fr justify-between content-center ;
     }
