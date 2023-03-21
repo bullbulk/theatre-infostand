@@ -48,10 +48,7 @@ section {
   box-shadow: 0 0 50px rgba(255, 255, 255, 1) inset;
   mask-image: linear-gradient(to top, transparent, black 15%);
 
-  @apply
-  relative flex flex-col overflow-y-scroll
-  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none']
-  [scrollbar-width:'none'];
+  @apply relative flex flex-col overflow-y-scroll;
 
   & > * {
     flex: 1;

@@ -27,3 +27,11 @@ export const loadData = async (fetch = fetch) => {
   }
 };
 
+export const isElementVisible = (element, parent = document.body) => {
+  const { top, bottom, height } = element.getBoundingClientRect();
+  const parentRect = parent.getBoundingClientRect();
+
+  return top <= parentRect.top
+    ? parentRect.top - top <= height
+    : bottom - parentRect.bottom <= height;
+};

@@ -1,9 +1,9 @@
 <script>
   import { dataFetcher, eventsData } from "$lib/store.js";
-  import { loadData } from "$lib/utils.js";
+  import { isElementVisible, loadData } from "$lib/utils.js";
   import { fade } from "svelte/transition";
   import { preloadImage } from "./preload.js";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
 
@@ -19,21 +19,39 @@
   $: selected = 0;
   $: currentDate = $eventsData.dates[selected];
   $: currentEvent = getEvent(currentDate.event);
+  $: rows = [];
+  let sidebar = null;
 
   let autoScrollInterval;
   const startAutoscroll = () => {
-    autoScrollInterval = setInterval(() => setSelected(selected + 1), 10 * 1000);
+    autoScrollInterval = setInterval(() => setSelected(selected + 1), 4 * 1000);
   };
   const stopAutoscroll = () => {
     clearInterval(autoScrollInterval);
   };
+  onDestroy(() => {
+    clearInterval(autoScrollInterval);
+  });
+
+  const scrollToElement = (index) => {
+    let rowIndexToShow = index + 1;
+    if (index === rows.length - 1) {
+      return;
+    }
+    if (!isElementVisible(rows[rowIndexToShow], sidebar)) {
+      sidebar.scrollTo({
+        top: rows[index].scrollHeight * (rowIndexToShow - 1),
+        behavior: "smooth"
+      });
+    }
+  };
 
   const setSelected = (index) => {
     if (selected === get(eventsData).dates.length - 1) {
-      selected = 0;
-    } else {
-      selected = index;
+      index = 0;
     }
+    selected = index;
+    scrollToElement(index);
   };
 
   const clickRow = (index) => {
@@ -68,15 +86,14 @@
           {/if}
         </div>
       {/key}
-      <div class="sidebar">
+      <div bind:this={sidebar} class="sidebar">
         {#each $eventsData.dates as item, i}
           {@const event = getEvent(item.event)}
           <div class="relative"
                on:keydown={() => {clickRow(i)}}
                on:click={() => {clickRow(i)}}>
-            <div class="shadow-overlay" class:active="{i === selected}">
-            </div>
-            <div class="row">
+            <div class="shadow-overlay" class:active="{i === selected}"></div>
+            <div bind:this={rows[i]} class="row">
               <div class="author">{event.author}</div>
               <div class="title">{event.title}</div>
               <div class="date">{item.date}, {item.time}</div>
