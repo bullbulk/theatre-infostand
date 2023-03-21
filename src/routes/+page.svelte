@@ -70,7 +70,7 @@
 
 <Header />
 
-<section class="pt-12">
+<section class="pt-6">
   <hr class="divider">
   <div id="events-info">
     <div id="upcoming-events">

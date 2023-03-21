@@ -12,10 +12,10 @@
 
 <style>
     header {
-        @apply h-36 flex justify-center;
+        @apply h-24 flex justify-center;
     }
 
     img {
-        @apply h-36;
+        @apply h-24;
     }
 </style>
