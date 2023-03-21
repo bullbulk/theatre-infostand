@@ -7,6 +7,7 @@
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
   import qr_icon from "$lib/images/qr-icon.svg";
+  import Header from "./Header.svelte";
 
   $: selected = 0;
   $: currentDate = $eventsData.dates[selected];
@@ -67,7 +68,9 @@
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section class="pt-6">
+<Header />
+
+<section class="pt-12">
   <hr class="divider">
   <div id="events-info">
     <div id="upcoming-events">
@@ -139,7 +142,7 @@
 
 <style lang="scss">
   #upcoming-events {
-    height: 60rem;
+    height: 58rem;
     grid-template-columns: 4fr 2fr;
     @apply grid grid-flow-col mb-6;
   }

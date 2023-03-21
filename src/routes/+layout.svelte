@@ -1,5 +1,4 @@
 <script>
-  import Header from "./Header.svelte";
   import "$lib/css/styles.scss";
   import Footer from "./Footer.svelte";
   import { get } from "svelte/store";
@@ -13,8 +12,6 @@
 </script>
 
 <div class="app">
-  <Header />
-
   <main>
     <slot />
   </main>
@@ -31,6 +28,6 @@
 
     main {
         flex: 1;
-        @apply flex flex-col w-full pt-6 m-0 box-border;
+        @apply relative flex flex-col w-full m-0 box-border;
     }
 </style>

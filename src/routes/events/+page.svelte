@@ -87,8 +87,8 @@
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section on:click={resetAutoredirect} on:keydown={resetAutoredirect} class="pt-3">
-  <hr class="divider">
+<section class="pt-3"
+         on:click={resetAutoredirect} on:keydown={resetAutoredirect}>
   <div class="relative">
     <div class="return top-5 left-5 flex flex-col gap-2 items-center">
       <div>
@@ -232,7 +232,8 @@
 
   .description {
     font-size: 14pt;
-    height: 20rem;
+    //height: 20rem;
+    height: 35rem;
     mask-image: linear-gradient(to top, transparent, black 10%);
     @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
   }
