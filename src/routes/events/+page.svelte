@@ -2,28 +2,19 @@
   import { eventsData, getEvent } from "$lib/store.js";
   import { isElementVisible } from "$lib/utils.js";
   import { fade } from "svelte/transition";
-  import { preloadImage } from "./preload.js";
-  import { onDestroy, onMount } from "svelte";
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
-  import qr_icon from "$lib/images/qr-icon.svg";
+  import { page } from "$app/stores";
+  import { onDestroy, onMount } from "svelte";
+  import { goto } from "$app/navigation";
+
+  const autoredirectTime = 60000;
 
   $: selected = 0;
-  $: currentDate = $eventsData.dates[selected];
-  $: currentEvent = getEvent(currentDate.event);
+  $: currentEvent = $eventsData.events[selected];
   $: rows = [];
-  let sidebar = null;
-
-  let autoScrollInterval;
-  const startAutoscroll = () => {
-    autoScrollInterval = setInterval(() => setSelected(selected + 1), 10 * 1000);
-  };
-  const stopAutoscroll = () => {
-    clearInterval(autoScrollInterval);
-  };
-  onDestroy(() => {
-    clearInterval(autoScrollInterval);
-  });
+  $: autoredirectTimeLeft = autoredirectTime;
+  let sidebar, timeLeftElement, autoredirectTimeout, autoredirectInterval;
 
   const scrollToElement = (index) => {
     let rowIndexToShow = index + 1;
@@ -47,19 +38,48 @@
   };
 
   const clickRow = (index) => {
-    stopAutoscroll();
-    startAutoscroll();
     setSelected(index);
   };
 
-  onMount(() => {
-    startAutoscroll();
-    eventsData.subscribe((values) => {
-      for (let i of values.events) {
-        preloadImage(i.image);
+  const startAutoredirect = () => {
+    autoredirectInterval = setInterval(function() {
+      autoredirectTimeLeft = autoredirectTimeLeft - 1000;
+      if (timeLeftElement !== undefined) {
+        timeLeftElement.innerHTML = (autoredirectTimeLeft / 1000) % 60;
       }
+    }, 1000);
+    autoredirectTimeout = setTimeout(function() {
+      goto("/");
+    }, autoredirectTime);
+  };
+
+  const stopAutoredirect = () => {
+    clearInterval(autoredirectInterval);
+    clearTimeout(autoredirectTimeout);
+  };
+
+  const resetAutoredirect = () => {
+    stopAutoredirect();
+    autoredirectTimeLeft = autoredirectTime;
+    startAutoredirect();
+  };
+
+  const event = Number.parseInt($page.url.searchParams.get("event"));
+  onMount(() => {
+    let firstLoad = true;
+    eventsData.subscribe(() => {
+      if (firstLoad) {
+        let selectedIndex = $eventsData.events.indexOf(getEvent(event));
+        if (selectedIndex !== -1) {
+          setSelected(selectedIndex);
+        }
+      }
+      firstLoad = false;
     });
+    startAutoredirect();
   });
+
+  onDestroy(stopAutoredirect);
 </script>
 
 <svelte:head>
@@ -67,10 +87,19 @@
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section class="pt-6">
+<section on:click={resetAutoredirect} on:keydown={resetAutoredirect} class="pt-3">
   <hr class="divider">
+  <div class="relative">
+    <div class="return top-5 left-5 flex flex-col gap-2 items-center">
+      <div>
+        <a class="rounded-lg px-4 py-1.5 border-2" href="/">На главную</a>
+      </div>
+<!--      <div class="remaining">(автопереход через <span bind:this={timeLeftElement}></span> сек.)</div>-->
+    </div>
+    <div class="page-title">Спектакли</div>
+  </div>
   <div id="events-info">
-    <div id="upcoming-events">
+    <div id="events">
       {#key currentEvent.image}
         <div in:fade class="afisha-img">
           {#if currentEvent !== undefined}
@@ -78,18 +107,22 @@
           {/if}
         </div>
       {/key}
-      <div bind:this={sidebar} class="sidebar">
-        {#each $eventsData.dates as item, i}
-          {@const event = getEvent(item.event)}
+      <div bind:this={sidebar} class="sidebar scrollbar-thin scrollbar-thumb-gray-200">
+        {#each $eventsData.events as event, i}
           <div class="relative"
                on:keydown={() => {clickRow(i)}}
                on:click={() => {clickRow(i)}}>
             <div class="shadow-overlay" class:active="{i === selected}"></div>
-            <div bind:this={rows[i]} class="row row-text">
-              <div class="author">{event.author}</div>
-              <div class="title">{event.title}</div>
-              <div class="date">{item.date}, {item.time}</div>
-              <hr>
+            <div bind:this={rows[i]} class="row event-row">
+              <div class="row-text pr-10">
+                <div class="author">{event.author}</div>
+                <div class="title">{event.title}</div>
+                <div class="genre">{event.genre}</div>
+                <hr>
+              </div>
+              <div class="flex flex-col justify-center h-full">
+                <img src="{event.image}" alt="Afisha">
+              </div>
             </div>
           </div>
         {/each}
@@ -110,7 +143,7 @@
             </div>
           </div>
           <hr class="vertical">
-          <div class="grid-auto-cols container">
+          <div in:fade class="grid-auto-cols container">
             <div class="additional-info pl-3">
               <div><b>Зал:</b> {currentEvent.hall.name}</div>
               <div><b>Длительность:</b> {currentEvent.duration}</div>
@@ -118,55 +151,57 @@
                 <div><b>Цена:</b> {currentEvent.price} руб.</div>
                 <!--<img class="w-7 h-7 m-0" src="{pushkin}" alt="Pushkin">-->
               </div>
-              <div class="mt-4 flex">
-                <a href="events/?event={currentEvent.id}">
-                  <button class="open-description">Подробнее</button>
-                </a>
-                <button class="buy m-0 flex items-center gap-2">
-                  <span>
-                    <img class="w-4 h-4 m-0" src="{qr_icon}" alt="Pushkin">
-                  </span>
-                  Купить билет
-                </button>
-              </div>
             </div>
           </div>
         </div>
       {/if}
+      <hr class="divider">
+      <div class="description">{@html currentEvent.description}</div>
     {/key}
   </div>
 </section>
 
 <style lang="scss">
-  #upcoming-events {
-    height: 60rem;
-    grid-template-columns: 4fr 2fr;
+  #events-info {
+    height: 72rem;
+    @apply mt-6;
+  }
+
+  #events {
+    height: 44rem;
+    grid-template-columns: 1fr 1fr;
     @apply grid grid-flow-col mb-6;
   }
 
-  #events-info {
-    height: 72rem;
+  .divider {
+    @apply pb-6;
+  }
+
+  .event-row {
+    grid-template-columns: 6fr 1fr;
+    justify-content: stretch;
+    @apply grid;
   }
 
   .event-info {
     grid-template-columns: 3fr 0 2fr;
-    @apply grid grid-flow-col justify-between;
+    @apply grid grid-flow-col justify-between pb-3;
 
     .info-text {
       .author {
         color: var(--text-accent);
-        font-size: 18pt;
+        font-size: 14pt;
         @apply font-bold;
       }
 
       .title {
-        font-size: 28pt;
+        font-size: 24pt;
         font-weight: bold;
         line-height: 1.2em;
       }
 
       .genre {
-        font-size: 14pt
+        font-size: 12pt
       }
 
       .age-limit {
@@ -190,21 +225,13 @@
   }
 
   .afisha-img img {
-    @apply rounded;
+    @apply rounded-lg;
   }
 
-  button {
-    font-size: 12pt;
-    @apply font-bold rounded-lg px-5 py-2 mr-2 mb-2;
-
-    &.open-description {
-      color: black;
-      background-color: var(--accent);
-    }
-
-    &.buy {
-      color: white;
-      background-color: black;
-    }
+  .description {
+    font-size: 14pt;
+    height: 20rem;
+    mask-image: linear-gradient(to top, transparent, black 10%);
+    @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
   }
 </style>

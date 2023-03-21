@@ -32,6 +32,11 @@ section {
   }
 }
 
+.page-title {
+  font-size: 38pt;
+  @apply w-full font-bold text-center;
+}
+
 .shadow-overlay {
   @apply absolute overflow-visible w-full h-full;
 
@@ -44,18 +49,22 @@ section {
 
 .sidebar {
   max-height: 60rem;
-  width: 19rem;
   box-shadow: 0 0 50px rgba(255, 255, 255, 1) inset;
   mask-image: linear-gradient(to top, transparent, black 15%);
 
-  @apply relative flex flex-col overflow-y-scroll;
+  @apply w-full relative flex flex-col overflow-y-scroll;
 
   & > * {
     flex: 1;
   }
 
   .row {
-    @apply flex flex-col p-6 py-3 gap-0.5;
+    @apply p-6 py-3;
+  }
+
+  .row-text {
+    flex: 1;
+    @apply flex flex-col gap-0.5;
 
     .author {
       font-size: 10pt;
@@ -71,10 +80,14 @@ section {
       font-size: 10pt;
     }
 
-    hr {
-      background-color: black;
-      @apply h-1 mt-4 rounded;
+    .genre {
+      font-size: 10pt;
     }
+  }
+
+  hr {
+    background-color: black;
+    @apply h-1 mt-4 rounded;
   }
 }
 
@@ -104,4 +117,19 @@ a {
 
 .float-rt {
   @apply absolute top-0 right-0;
+}
+
+.return {
+  font-size: 14pt;
+  color: var(--text-accent);
+  @apply absolute;
+
+  .remaining {
+    color: #939393;
+    font-size: 12pt;
+  }
+
+  a {
+    border-color: var(--text-accent);
+  }
 }

@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 
 export const eventsData = writable({
   hash: "",
@@ -6,3 +6,8 @@ export const eventsData = writable({
   dates: [{ date: "", time: "", event: 0 }]
 });
 export const dataFetcher = writable(null);
+
+
+export const getEvent = (id) => {
+  return get(eventsData).events.filter((v) => v.id === id)[0];
+};
