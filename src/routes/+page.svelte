@@ -78,7 +78,7 @@
           {/if}
         </div>
       {/key}
-      <div bind:this={sidebar} class="sidebar">
+      <div bind:this={sidebar} class="sidebar scrollbar-thin scrollbar-thumb-gray-200">
         {#each $eventsData.dates as item, i}
           {@const event = getEvent(item.event)}
           <div class="relative"

@@ -94,7 +94,7 @@
       <div>
         <a class="rounded-lg px-4 py-1.5 border-2" href="/">На главную</a>
       </div>
-<!--      <div class="remaining">(автопереход через <span bind:this={timeLeftElement}></span> сек.)</div>-->
+      <!--      <div class="remaining">(автопереход через <span bind:this={timeLeftElement}></span> сек.)</div>-->
     </div>
     <div class="page-title">Спектакли</div>
   </div>
@@ -156,7 +156,9 @@
         </div>
       {/if}
       <hr class="divider">
-      <div class="description">{@html currentEvent.description}</div>
+      <div class="description scrollbar-thin scrollbar-thumb-gray-200">
+        {@html currentEvent.description}
+      </div>
     {/key}
   </div>
 </section>

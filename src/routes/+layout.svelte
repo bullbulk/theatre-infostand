@@ -12,7 +12,7 @@
   }
 </script>
 
-<div class="app scrollbar-thin scrollbar-thumb-gray-200">
+<div class="app">
   <Header />
 
   <main>
