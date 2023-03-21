@@ -8,19 +8,34 @@
   import pushkin from "$lib/images/pushkin2.svg";
   import qr_icon from "$lib/images/qr-icon.svg";
   import Header from "./Header.svelte";
+  import QrCode from "$lib/components/QrCode.svelte";
+  import { Modal } from "flowbite-svelte";
+  import Autoclose from "$lib/components/Autoclose.svelte";
 
   $: selected = 0;
   $: currentDate = $eventsData.dates[selected];
   $: currentEvent = getEvent(currentDate.event);
   $: rows = [];
-  let sidebar = null;
+  $: currentBuyUrl = "";
+  let sidebar;
+  $: showModal = false;
+  $: {
+    if (showModal === false) {
+      startAutoscroll();
+    } else {
+      stopAutoscroll();
+    }
+  }
 
   let autoScrollInterval;
   const startAutoscroll = () => {
-    autoScrollInterval = setInterval(() => setSelected(selected + 1), 10 * 1000);
+    if (autoScrollInterval == null) {
+      autoScrollInterval = setInterval(() => setSelected(selected + 1), 5 * 1000);
+    }
   };
   const stopAutoscroll = () => {
     clearInterval(autoScrollInterval);
+    autoScrollInterval = null;
   };
   onDestroy(() => {
     clearInterval(autoScrollInterval);
@@ -61,6 +76,11 @@
       }
     });
   });
+
+  function showBuyWidget(url) {
+    currentBuyUrl = url;
+    showModal = true;
+  }
 </script>
 
 <svelte:head>
@@ -125,18 +145,42 @@
                 <a href="events/?event={currentEvent.id}">
                   <button class="open-description">Подробнее</button>
                 </a>
-                <button class="buy m-0 flex items-center gap-2">
+                {#if currentDate.buy_link}
+                  <button
+                    on:click={() => {showBuyWidget(currentDate.buy_link)}}
+                    class="buy m-0 flex items-center gap-2">
                   <span>
                     <img class="w-4 h-4 m-0" src="{qr_icon}" alt="Pushkin">
                   </span>
-                  Купить билет
-                </button>
+                    Купить билет
+                  </button>
+                {/if}
               </div>
             </div>
           </div>
         </div>
       {/if}
     {/key}
+    <Modal title="Покупка билета" size="xs" class="buy-widget"
+           bind:open={showModal} autoclose>
+      <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
+        <div in:fade out:fade class="flex flex-col justify-center items-center gap-8">
+          <p>Отсканируйте QR-код, чтобы перейти на страницу покупки
+            на сайте театра (<b>dramydramy.ru</b>)</p>
+          <div>
+            {#key currentBuyUrl}
+              <svelte:component this={QrCode} url={currentBuyUrl} />
+            {/key}
+          </div>
+          <div class="underscore">
+            Покупка доступна только в кассе театра и на сайте <b>dramydramy.ru</b>
+          </div>
+        </div>
+      </Autoclose>
+      <svelte:fragment slot="footer">
+        <button in:fade out:fade class="align-self-end">Закрыть</button>
+      </svelte:fragment>
+    </Modal>
   </div>
 </section>
 
@@ -198,7 +242,7 @@
 
   button {
     font-size: 12pt;
-    @apply font-bold rounded-lg px-5 py-2 mr-2 mb-2;
+    @apply rounded-lg px-5 py-2 mr-2 mb-2;
 
     &.open-description {
       color: black;
@@ -209,5 +253,9 @@
       color: white;
       background-color: black;
     }
+  }
+
+  .buy-widget {
+    font-size: 18pt;
   }
 </style>
