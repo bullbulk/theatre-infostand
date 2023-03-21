@@ -24,7 +24,7 @@
 
   let autoScrollInterval;
   const startAutoscroll = () => {
-    autoScrollInterval = setInterval(() => setSelected(selected + 1), 4 * 1000);
+    autoScrollInterval = setInterval(() => setSelected(selected + 1), 10 * 1000);
   };
   const stopAutoscroll = () => {
     clearInterval(autoScrollInterval);
@@ -185,7 +185,6 @@
   }
 
   .afisha-img {
-    max-height: 60rem;
     @apply flex flex-col justify-center w-full;
   }
 
