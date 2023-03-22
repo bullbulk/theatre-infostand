@@ -1,6 +1,6 @@
 <script>
   import { eventsData, getEvent } from "$lib/store.js";
-  import { isElementVisible } from "$lib/utils.js";
+  import { scrollToElement } from "$lib/utils.js";
   import { fade } from "svelte/transition";
   import { preloadImage } from "./preload.js";
   import { onDestroy, onMount } from "svelte";
@@ -11,21 +11,6 @@
   import QrCode from "$lib/components/QrCode.svelte";
   import { Modal } from "flowbite-svelte";
   import Autoclose from "$lib/components/Autoclose.svelte";
-
-  $: selected = 0;
-  $: currentDate = $eventsData.dates[selected];
-  $: currentEvent = getEvent(currentDate.event);
-  $: rows = [];
-  $: currentBuyUrl = "";
-  let sidebar;
-  $: showModal = false;
-  $: {
-    if (showModal === false) {
-      startAutoscroll();
-    } else {
-      stopAutoscroll();
-    }
-  }
 
   let autoScrollInterval;
   const startAutoscroll = () => {
@@ -41,25 +26,12 @@
     clearInterval(autoScrollInterval);
   });
 
-  const scrollToElement = (index) => {
-    let rowIndexToShow = index + 1;
-    if (index === rows.length - 1) {
-      return;
-    }
-    if (!isElementVisible(rows[rowIndexToShow], sidebar)) {
-      sidebar.scrollTo({
-        top: rows[index].scrollHeight * (rowIndexToShow - 1),
-        behavior: "smooth"
-      });
-    }
-  };
-
   const setSelected = (index) => {
     if (selected === get(eventsData).dates.length - 1) {
       index = 0;
     }
     selected = index;
-    scrollToElement(index);
+    scrollToElement(index, rows, sidebar);
   };
 
   const clickRow = (index) => {
@@ -67,6 +39,21 @@
     startAutoscroll();
     setSelected(index);
   };
+
+  $: selected = 0;
+  $: currentDate = $eventsData.dates[selected];
+  $: currentEvent = getEvent(currentDate.event);
+  $: rows = [];
+  $: currentBuyUrl = "";
+  let sidebar;
+  $: showModal = false;
+  $: {
+    if (showModal === false) {
+      startAutoscroll();
+    } else {
+      stopAutoscroll();
+    }
+  }
 
   onMount(() => {
     startAutoscroll();
@@ -161,15 +148,14 @@
         </div>
       {/if}
     {/key}
-    <Modal title="Покупка билета" size="xs" class="buy-widget"
-           bind:open={showModal} autoclose>
+    <Modal title="Покупка билета" size="xs" bind:open={showModal} autoclose>
       <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
-        <div in:fade out:fade class="flex flex-col justify-center items-center gap-8">
+        <div class="flex flex-col justify-center items-center gap-8">
           <p>Отсканируйте QR-код, чтобы перейти на страницу покупки
             на сайте театра (<b>dramydramy.ru</b>)</p>
           <div>
             {#key currentBuyUrl}
-              <svelte:component this={QrCode} url={currentBuyUrl} />
+              <QrCode url={currentBuyUrl} />
             {/key}
           </div>
           <div class="underscore">
@@ -178,7 +164,7 @@
         </div>
       </Autoclose>
       <svelte:fragment slot="footer">
-        <button in:fade out:fade class="align-self-end">Закрыть</button>
+        <button class="align-self-end">Закрыть</button>
       </svelte:fragment>
     </Modal>
   </div>
@@ -195,51 +181,6 @@
     height: 72rem;
   }
 
-  .event-info {
-    grid-template-columns: 3fr 0 2fr;
-    @apply grid grid-flow-col justify-between;
-
-    .info-text {
-      .author {
-        color: var(--text-accent);
-        font-size: 18pt;
-        @apply font-bold;
-      }
-
-      .title {
-        font-size: 28pt;
-        font-weight: bold;
-        line-height: 1.2em;
-      }
-
-      .genre {
-        font-size: 14pt
-      }
-
-      .age-limit {
-        font-size: 16pt;
-        border: var(--accent) 4px solid;
-        @apply font-bold px-1;
-      }
-    }
-
-    .container {
-      @apply relative flex flex-col gap-2 py-3 px-6;
-    }
-
-    .additional-info {
-      font-size: 14pt;
-    }
-  }
-
-  .afisha-img {
-    @apply flex flex-col justify-center w-full;
-  }
-
-  .afisha-img img {
-    @apply rounded;
-  }
-
   button {
     font-size: 12pt;
     @apply rounded-lg px-5 py-2 mr-2 mb-2;
@@ -253,9 +194,5 @@
       color: white;
       background-color: black;
     }
-  }
-
-  .buy-widget {
-    font-size: 18pt;
   }
 </style>

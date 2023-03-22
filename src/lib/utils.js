@@ -36,21 +36,15 @@ export const isElementVisible = (element, parent = document.body) => {
     : bottom - parentRect.bottom <= height;
 };
 
-export function clickOutside(node) {
-  // the node has been mounted in the DOM
-
-  window.addEventListener("click", handleClick);
-
-  function handleClick(e) {
-    if (!node.contains(e.target)) {
-      node.dispatchEvent(new CustomEvent("outsideclick"));
-    }
+export const scrollToElement = (index, children, parent) => {
+  let rowIndexToShow = index + 1;
+  if (index === children.length - 1) {
+    return;
   }
-
-  return {
-    destroy() {
-      // the node has been removed from the DOM
-      window.removeEventListener("click", handleClick);
-    }
-  };
-}
+  if (!isElementVisible(children[rowIndexToShow], parent)) {
+    parent.scrollTo({
+      top: children[index].scrollHeight * (rowIndexToShow - 1),
+      behavior: "smooth"
+    });
+  }
+};

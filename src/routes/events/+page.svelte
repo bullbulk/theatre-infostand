@@ -1,6 +1,5 @@
 <script>
   import { eventsData, getEvent } from "$lib/store.js";
-  import { isElementVisible } from "$lib/utils.js";
   import { fade } from "svelte/transition";
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
@@ -8,31 +7,19 @@
   import { page } from "$app/stores";
   import Autoclose from "$lib/components/Autoclose.svelte";
   import { goto } from "$app/navigation";
+  import { scrollToElement } from "$lib/utils.js";
 
   $: selected = 0;
   $: currentEvent = $eventsData.events[selected];
   $: rows = [];
   let sidebar;
 
-  const scrollToElement = (index) => {
-    let rowIndexToShow = index + 1;
-    if (index === rows.length - 1) {
-      return;
-    }
-    if (!isElementVisible(rows[rowIndexToShow], sidebar)) {
-      sidebar.scrollTo({
-        top: rows[index].scrollHeight * (rowIndexToShow - 1),
-        behavior: "smooth"
-      });
-    }
-  };
-
   const setSelected = (index) => {
     if (selected === get(eventsData).dates.length - 1) {
       index = 0;
     }
     selected = index;
-    scrollToElement(index);
+    scrollToElement(index, rows, sidebar);
   };
 
   const clickRow = (index) => {
@@ -160,52 +147,26 @@
 
   .event-info {
     grid-template-columns: 3fr 0 2fr;
-    @apply grid grid-flow-col justify-between pb-3;
+    @apply pb-3;
 
     .info-text {
       .author {
-        color: var(--text-accent);
         font-size: 14pt;
-        @apply font-bold;
       }
 
       .title {
         font-size: 24pt;
-        font-weight: bold;
-        line-height: 1.2em;
       }
 
       .genre {
         font-size: 12pt
       }
-
-      .age-limit {
-        font-size: 16pt;
-        border: var(--accent) 4px solid;
-        @apply font-bold px-1;
-      }
     }
-
-    .container {
-      @apply relative flex flex-col gap-2 py-3 px-6;
-    }
-
-    .additional-info {
-      font-size: 14pt;
-    }
-  }
-
-  .afisha-img {
-    @apply flex flex-col justify-center w-full;
-  }
-
-  .afisha-img img {
-    @apply rounded-lg;
   }
 
   .description {
     font-size: 14pt;
-    //height: 20rem;
+    // height: 20rem;
     height: 35rem;
     mask-image: linear-gradient(to top, transparent, black 10%);
     @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;

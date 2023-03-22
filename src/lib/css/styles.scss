@@ -133,3 +133,48 @@ a {
     border-color: var(--text-accent);
   }
 }
+
+.afisha-img {
+  @apply flex flex-col justify-center w-full;
+}
+
+.afisha-img img {
+  @apply rounded;
+}
+
+.event-info {
+  grid-template-columns: 3fr 0 2fr;
+  @apply grid grid-flow-col justify-between;
+
+  .info-text {
+    .author {
+      color: var(--text-accent);
+      font-size: 18pt;
+      @apply font-bold;
+    }
+
+    .title {
+      font-size: 28pt;
+      font-weight: bold;
+      line-height: 1.2em;
+    }
+
+    .genre {
+      font-size: 14pt;
+    }
+
+    .age-limit {
+      font-size: 16pt;
+      border: var(--accent) 4px solid;
+      @apply font-bold px-1;
+    }
+  }
+
+  .container {
+    @apply relative flex flex-col gap-2 py-3 px-6;
+  }
+
+  .additional-info {
+    font-size: 14pt;
+  }
+}
