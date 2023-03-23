@@ -74,7 +74,7 @@
               <div bind:this={rows[i]} class="row event-row">
                 <div class="row-text pr-10">
                   <div class="author">{event.author}</div>
-                  <div class="title">{event.title}</div>
+                  <div class="title">{event.title} {event.age_limit}</div>
                   <div class="genre">{event.genre}</div>
                   <hr>
                 </div>
