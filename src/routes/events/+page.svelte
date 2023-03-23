@@ -1,5 +1,5 @@
 <script>
-  import { eventsData, getEvent } from "$lib/store.js";
+  import { eventsData, getObjectById } from "$lib/store.js";
   import { fade } from "svelte/transition";
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
@@ -31,7 +31,9 @@
     let firstLoad = true;
     eventsData.subscribe(() => {
       if (firstLoad) {
-        let selectedIndex = $eventsData.events.indexOf(getEvent(event));
+        let selectedIndex = $eventsData.events.indexOf(
+          getObjectById(event, $eventsData.events)
+        );
         if (selectedIndex !== -1) {
           setSelected(selectedIndex);
         }

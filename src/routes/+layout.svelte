@@ -2,13 +2,24 @@
   import "$lib/css/styles.scss";
   import Footer from "./Footer.svelte";
   import { get } from "svelte/store";
-  import { dataFetcher } from "$lib/store.js";
+  import { dataFetcher, eventsData } from "$lib/store.js";
   import { loadData } from "$lib/utils.js";
+  import { preloadImage } from "./preload.js";
+  import { onMount } from "svelte";
 
   if (get(dataFetcher) === null) {
     dataFetcher.set(
       setInterval(() => loadData(fetch), 5 * 60 * 1000));
   }
+
+  onMount(() => {
+    eventsData.subscribe((value) => {
+      for (let i of value.events) {
+        preloadImage(i.image);
+      }
+    });
+  });
+
 </script>
 
 <div class="app">

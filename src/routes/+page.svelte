@@ -1,8 +1,7 @@
 <script>
-  import { eventsData, getEvent } from "$lib/store.js";
+  import { eventsData, getObjectById } from "$lib/store.js";
   import { scrollToElement } from "$lib/utils.js";
   import { fade } from "svelte/transition";
-  import { preloadImage } from "./preload.js";
   import { onDestroy, onMount } from "svelte";
   import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
@@ -11,6 +10,7 @@
   import QrCode from "$lib/components/QrCode.svelte";
   import { Modal } from "flowbite-svelte";
   import Autoclose from "$lib/components/Autoclose.svelte";
+  import { page } from "$app/stores";
 
   let autoScrollInterval;
   const startAutoscroll = () => {
@@ -42,7 +42,7 @@
 
   $: selected = 0;
   $: currentDate = $eventsData.dates[selected];
-  $: currentEvent = getEvent(currentDate.event);
+  $: currentEvent = getObjectById(currentDate.event, $eventsData.events);
   $: rows = [];
   $: currentBuyUrl = "";
   let sidebar;
@@ -56,12 +56,22 @@
   }
 
   onMount(() => {
-    startAutoscroll();
-    eventsData.subscribe((values) => {
-      for (let i of values.events) {
-        preloadImage(i.image);
+    const date = Number.parseInt($page.url.searchParams.get("date"));
+
+    let firstLoad = true;
+    eventsData.subscribe(() => {
+      if (firstLoad) {
+        let selectedIndex = $eventsData.dates.indexOf(
+          getObjectById(date, $eventsData.dates)
+        );
+        if (selectedIndex !== -1) {
+          setSelected(selectedIndex);
+        }
       }
+      firstLoad = false;
     });
+
+    startAutoscroll();
   });
 
   function showBuyWidget(url) {
@@ -90,7 +100,7 @@
       {/key}
       <div bind:this={sidebar} class="sidebar scrollbar-thin scrollbar-thumb-gray-200">
         {#each $eventsData.dates as item, i}
-          {@const event = getEvent(item.event)}
+          {@const event = getObjectById(item.event, $eventsData.events)}
           <div class="relative"
                on:keydown={() => {clickRow(i)}}
                on:click={() => {clickRow(i)}}>
