@@ -46,7 +46,7 @@
 </svelte:head>
 
 <section class="pt-3">
-  <Autoclose closeTimeout={10000} onClose={() => goto("/")}>
+  <Autoclose closeTimeout={60000} onClose={() => goto("/")}>
     <div class="relative">
       <div class="return top-5 left-5 flex flex-col gap-2 items-center">
         <div>
