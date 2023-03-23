@@ -108,7 +108,7 @@
             <div bind:this={rows[i]} class="row row-text">
               <div class="author">{event.author}</div>
               <div class="title">{event.title}</div>
-              <div class="date">{item.date}, {item.time}</div>
+              <div class="date">{item.date}, {item.time} ({item.weekday}.)</div>
               <hr>
             </div>
           </div>
