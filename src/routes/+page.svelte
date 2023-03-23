@@ -3,7 +3,6 @@
   import { scrollToElement } from "$lib/utils.js";
   import { fade } from "svelte/transition";
   import { onDestroy, onMount } from "svelte";
-  import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
   import qr_icon from "$lib/images/qr-icon.svg";
   import Header from "./Header.svelte";
@@ -15,7 +14,13 @@
   let autoScrollInterval;
   const startAutoscroll = () => {
     if (autoScrollInterval == null) {
-      autoScrollInterval = setInterval(() => setSelected(selected + 1), 5 * 1000);
+      autoScrollInterval = setInterval(() => {
+        if (selected === $eventsData.dates.length - 1) {
+          setSelected(0);
+        } else {
+          setSelected(selected + 1);
+        }
+      }, 5 * 1000);
     }
   };
   const stopAutoscroll = () => {
@@ -27,9 +32,6 @@
   });
 
   const setSelected = (index) => {
-    if (selected === get(eventsData).dates.length - 1) {
-      index = 0;
-    }
     selected = index;
     scrollToElement(index, rows, sidebar);
   };

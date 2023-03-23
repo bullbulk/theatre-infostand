@@ -36,14 +36,18 @@ export const isElementVisible = (element, parent = document.body) => {
     : bottom - parentRect.bottom <= height;
 };
 
+const nextItemOffset = 3;
+const skipTopItems = 3;
+
 export const scrollToElement = (index, children, parent) => {
-  let rowIndexToShow = index + 1;
-  if (index === children.length - 1) {
+  let rowIndexToShow = index + nextItemOffset;
+
+  if (rowIndexToShow >= children.length) {
     return;
   }
   if (!isElementVisible(children[rowIndexToShow], parent)) {
     parent.scrollTo({
-      top: children[index].scrollHeight * (rowIndexToShow - 1),
+      top: children[rowIndexToShow].scrollHeight * (index - skipTopItems),
       behavior: "smooth"
     });
   }

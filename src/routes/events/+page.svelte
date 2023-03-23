@@ -15,9 +15,6 @@
   let sidebar;
 
   const setSelected = (index) => {
-    if (selected === get(eventsData).dates.length - 1) {
-      index = 0;
-    }
     selected = index;
     scrollToElement(index, rows, sidebar);
   };
