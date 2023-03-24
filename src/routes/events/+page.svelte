@@ -1,13 +1,15 @@
 <script>
   import { eventsData, getObjectById } from "$lib/store.js";
   import { fade } from "svelte/transition";
-  import { get } from "svelte/store";
   import pushkin from "$lib/images/pushkin2.svg";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import Autoclose from "$lib/components/Autoclose.svelte";
   import { goto } from "$app/navigation";
   import { scrollToElement } from "$lib/utils.js";
+  import curtains from "$lib/images/curtains.svg";
+  import duration from "$lib/images/duration.svg";
+  import ruble from "$lib/images/ruble.svg";
 
   $: selected = 0;
   $: currentEvent = $eventsData.events[selected];
@@ -89,7 +91,7 @@
       {#key currentEvent.title}
         {#if currentEvent !== undefined}
           <div class="event-info">
-            <div in:fade class="info-text container">
+            <div class="info-text container">
               <div class="author">{currentEvent.author}</div>
               <div class="title">{currentEvent.title}</div>
               <div class="genre">{currentEvent.genre}</div>
@@ -101,19 +103,42 @@
               </div>
             </div>
             <hr class="vertical">
-            <div in:fade class="grid-auto-cols container">
-              <div class="additional-info pl-3">
-                <div><b>Зал:</b> {currentEvent.hall.name}</div>
-                <div><b>Длительность:</b> {currentEvent.duration}</div>
-                <div class="flex gap-2">
-                  <div><b>Цена:</b> {currentEvent.price} руб.</div>
-                  <!--<img class="w-7 h-7 m-0" src="{pushkin}" alt="Pushkin">-->
+            <div class="grid-auto-cols container">
+              <div class="upcoming-dates flex flex-col gap-2 pl-3">
+                <div class="title">Ближайшие показы</div>
+                <div class="flex gap-4">
+                  {#each currentEvent.dates as i}
+                    {@const date = getObjectById(i, $eventsData.dates)}
+                    <a href="/?date={i}">
+                      <div class="date-btn shadow-md">
+                        <div class="date">{date.numerical_date}</div>
+                        <div class="weekday">{date.weekday_full}</div>
+                        <div class="time">{date.time}</div>
+                      </div>
+                    </a>
+                  {:else}
+                    <i>Ближайших показов нет.</i>
+                  {/each}
                 </div>
               </div>
             </div>
           </div>
+          <div class="flex w-full justify-between px-24 py-6">
+            <div class="flex gap-4 items-center justify-center">
+              <img class="w-6 h-6" src="{curtains}" alt="Curtains">
+              <p><b>Зал:</b> {currentEvent.hall.name}</p>
+            </div>
+            <div class="flex gap-3 items-center justify-center">
+              <img class="w-6 h-6" src="{duration}" alt="Duration">
+              <p><b>Длительность:</b> {currentEvent.duration}</p>
+            </div>
+            <div class="flex gap-3 items-center justify-center">
+              <img class="w-6 h-6" src="{ruble}" alt="Curtains">
+              <p><b>Цена:</b> {currentEvent.price} руб.</p>
+            </div>
+          </div>
+          <hr class="divider">
         {/if}
-        <hr class="divider">
         <div class="description scrollbar-thin scrollbar-thumb-gray-200">
           {@html currentEvent.description}
         </div>
@@ -125,6 +150,7 @@
 <style lang="scss">
   #events-info {
     height: 72rem;
+    font-size: 16pt;
     @apply mt-6;
   }
 
@@ -169,5 +195,9 @@
     height: 35rem;
     mask-image: linear-gradient(to top, transparent, black 10%);
     @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
+  }
+
+  hr.vertical {
+    height: 8rem;
   }
 </style>

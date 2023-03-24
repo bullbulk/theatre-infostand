@@ -37,7 +37,7 @@ export const isElementVisible = (element, parent = document.body) => {
 };
 
 const nextItemOffset = 3;
-const skipTopItems = 3;
+const skipTopItems = 2;
 
 export const scrollToElement = (index, children, parent) => {
   let rowIndexToShow = index + nextItemOffset;

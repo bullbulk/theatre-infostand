@@ -5,10 +5,13 @@ export const eventsData = writable({
   events: [
     {
       id: 0, title: "", image: "", age_limit: "0+", duration: "",
-      hall: { name: "" }
+      hall: { name: "" }, dates: [0]
     }
   ],
-  dates: [{ date: "", time: "", event: 0, buy_link: "" }]
+  dates: [{
+    date: "", time: "", event: 0, buy_link: "",
+    numerical_date: "", weekday_full: ""
+  }]
 });
 export const dataFetcher = writable(null);
 

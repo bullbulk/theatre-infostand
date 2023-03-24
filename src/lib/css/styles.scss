@@ -41,7 +41,7 @@ section {
   @apply absolute overflow-visible w-full h-full;
 
   &.active {
-    box-shadow: 0 0 50px rgba(0, 0, 0, .25);
+    box-shadow: 0 0 75px rgba(0, 0, 0, .25);
     clip-path: inset(-100px 0 -100px 0);
     transition: 0.4s ease-out;
   }
@@ -49,7 +49,6 @@ section {
 
 .sidebar {
   max-height: 60rem;
-  box-shadow: 0 0 50px rgba(255, 255, 255, 1) inset;
   mask-image: linear-gradient(to top, transparent, black 15%);
 
   @apply w-full relative flex flex-col overflow-y-scroll;
@@ -171,10 +170,35 @@ a {
   }
 
   .container {
-    @apply relative flex flex-col gap-2 py-3 px-6;
+    @apply relative flex flex-col gap-2 px-6;
   }
 
   .additional-info {
     font-size: 14pt;
+  }
+}
+
+.upcoming-dates {
+  font-size: 14pt;
+
+  .title {
+    font-size: 18pt;
+  }
+
+  .date-btn {
+    @apply flex flex-col items-center leading-snug px-2 py-1 border-2 rounded;
+    .date {
+      font-size: 18pt;
+      @apply font-bold;
+    }
+
+    .weekday {
+      color: var(--text-accent);
+      font-size: 8pt;
+    }
+
+    .time {
+      font-size: 12pt;
+    }
   }
 }
