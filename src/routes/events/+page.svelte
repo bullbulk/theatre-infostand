@@ -168,12 +168,9 @@
     <Modal title="Просмотр фото" size="md" bind:open={showModal} autoclose>
       <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
         <div>
-          <img src="{currentPhoto}" alt="Current">
+          <img class="rounded-xl" src="{currentPhoto}" alt="Current">
         </div>
       </Autoclose>
-      <svelte:fragment slot="footer">
-        <button class="justify-self-end">Закрыть</button>
-      </svelte:fragment>
     </Modal>
   </Autoclose>
 </section>
