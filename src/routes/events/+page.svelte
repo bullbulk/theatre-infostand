@@ -224,7 +224,7 @@
     }
 
     .photos {
-      height: 32rem;
+      height: 33rem;
       mask-image: linear-gradient(
                       to bottom,
                       rgba(255, 255, 255, .50) 0%,
