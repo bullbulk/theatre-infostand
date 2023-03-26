@@ -10,10 +10,13 @@
   import curtains from "$lib/images/curtains.svg";
   import duration from "$lib/images/duration.svg";
   import ruble from "$lib/images/ruble.svg";
+  import { Modal } from "flowbite-svelte";
 
   $: selected = 0;
   $: currentEvent = $eventsData.events[selected];
   $: rows = [];
+  $: showModal = false;
+  $: currentPhoto = "";
   let sidebar;
 
   const setSelected = (index) => {
@@ -23,6 +26,11 @@
 
   const clickRow = (index) => {
     setSelected(index);
+  };
+
+  const showPhoto = (src) => {
+    currentPhoto = src;
+    showModal = true;
   };
 
   const event = Number.parseInt($page.url.searchParams.get("event"));
@@ -139,11 +147,34 @@
           </div>
           <hr class="divider">
         {/if}
-        <div class="description scrollbar-thin scrollbar-thumb-gray-200">
-          {@html currentEvent.description}
+        <div class="description" class:columns="{currentEvent.photos.length !== 0}">
+          <div class="text scrollbar-thin scrollbar-thumb-gray-300">
+            {@html currentEvent.description}
+          </div>
+          {#if currentEvent.photos.length !== 0}
+            <div class="photos scrollbar-thin scrollbar-thumb-gray-300">
+              {#each currentEvent.photos as i}
+                {@const photo = getObjectById(i, $eventsData.photos)}
+                <div on:click={() => showPhoto(photo.image)}
+                     on:keydown={() => showPhoto(photo.image)}>
+                  <img src="{photo.image}" alt="{currentEvent.title} photo">
+                </div>
+              {/each}
+            </div>
+          {/if}
         </div>
       {/key}
     </div>
+    <Modal title="Просмотр фото" size="md" bind:open={showModal} autoclose>
+      <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
+        <div>
+          <img src="{currentPhoto}" alt="Current">
+        </div>
+      </Autoclose>
+      <svelte:fragment slot="footer">
+        <button class="justify-self-end">Закрыть</button>
+      </svelte:fragment>
+    </Modal>
   </Autoclose>
 </section>
 
@@ -190,11 +221,34 @@
   }
 
   .description {
-    font-size: 14pt;
-    // height: 20rem;
-    height: 35rem;
-    mask-image: linear-gradient(to top, transparent, black 10%);
-    @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
+    &.columns {
+      grid-template-columns: 3fr 1fr;
+      @apply grid gap-6;
+    }
+
+    .photos {
+      height: 32rem;
+      mask-image: linear-gradient(
+                      to bottom,
+                      rgba(255, 255, 255, .50) 0%,
+                      rgba(255, 255, 255, 1) 10%,
+                      rgba(255, 255, 255, 1) 90%,
+                      rgba(255, 255, 255, .50) 100%
+      );
+      @apply flex flex-col gap-2 overflow-y-scroll;
+
+      img {
+        @apply rounded-xl;
+      }
+    }
+
+    .text {
+      height: 25rem;
+      font-size: 14pt;
+      // height: 20rem;
+      mask-image: linear-gradient(to top, transparent, black 10%);
+      @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
+    }
   }
 
   hr.vertical {
