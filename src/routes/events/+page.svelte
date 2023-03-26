@@ -225,13 +225,6 @@
 
     .photos {
       height: 33rem;
-      mask-image: linear-gradient(
-                      to bottom,
-                      rgba(255, 255, 255, .50) 0%,
-                      rgba(255, 255, 255, 1) 10%,
-                      rgba(255, 255, 255, 1) 90%,
-                      rgba(255, 255, 255, .50) 100%
-      );
       @apply flex flex-col gap-2 overflow-y-scroll;
 
       img {
