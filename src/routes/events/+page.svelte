@@ -147,21 +147,8 @@
           </div>
           <hr class="divider">
         {/if}
-        <div class="description" class:columns="{currentEvent.photos.length !== 0}">
-          <div class="text scrollbar-thin scrollbar-thumb-gray-300">
-            {@html currentEvent.description}
-          </div>
-          {#if currentEvent.photos.length !== 0}
-            <div class="photos scrollbar-thin scrollbar-thumb-gray-300">
-              {#each currentEvent.photos as i}
-                {@const photo = getObjectById(i, $eventsData.photos)}
-                <div on:click={() => showPhoto(photo.image)}
-                     on:keydown={() => showPhoto(photo.image)}>
-                  <img src="{photo.image}" alt="{currentEvent.title} photo">
-                </div>
-              {/each}
-            </div>
-          {/if}
+        <div class="description scrollbar-thin scrollbar-thumb-gray-300">
+          {@html currentEvent.description}
         </div>
       {/key}
     </div>
@@ -218,27 +205,11 @@
   }
 
   .description {
-    &.columns {
-      grid-template-columns: 3fr 1fr;
-      @apply grid gap-6;
-    }
-
-    .photos {
-      height: 33rem;
-      @apply flex flex-col gap-2 overflow-y-scroll;
-
-      img {
-        @apply rounded-xl;
-      }
-    }
-
-    .text {
-      height: 25rem;
-      font-size: 14pt;
-      // height: 20rem;
-      mask-image: linear-gradient(to top, transparent, black 10%);
-      @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
-    }
+    height: 25rem;
+    font-size: 14pt;
+    // height: 20rem;
+    mask-image: linear-gradient(to top, transparent, black 10%);
+    @apply flex flex-col gap-4 indent-8 leading-relaxed overflow-y-scroll;
   }
 
   hr.vertical {
