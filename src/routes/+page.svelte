@@ -14,7 +14,6 @@
 
   let autoScrollInterval;
   const startAutoscroll = () => {
-    return;
     if (autoScrollInterval == null) {
       autoScrollInterval = setInterval(() => {
         if (selected === $eventsData.dates.length - 1) {
