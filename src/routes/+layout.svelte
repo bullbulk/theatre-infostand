@@ -39,6 +39,7 @@
 
     main {
         flex: 1;
+        font-size: 16pt;
         @apply relative flex flex-col w-full m-0 box-border;
     }
 </style>

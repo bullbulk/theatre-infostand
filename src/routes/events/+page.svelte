@@ -7,10 +7,8 @@
   import Autoclose from "$lib/components/Autoclose.svelte";
   import { goto } from "$app/navigation";
   import { scrollToElement } from "$lib/utils.js";
-  import curtains from "$lib/images/curtains.svg";
-  import duration from "$lib/images/duration.svg";
-  import ruble from "$lib/images/ruble.svg";
   import { Modal } from "flowbite-svelte";
+  import EventInfoBar from "$lib/components/EventInfoBar.svelte";
 
   $: selected = 0;
   $: currentEvent = $eventsData.events[selected];
@@ -26,11 +24,6 @@
 
   const clickRow = (index) => {
     setSelected(index);
-  };
-
-  const showPhoto = (src) => {
-    currentPhoto = src;
-    showModal = true;
   };
 
   const event = Number.parseInt($page.url.searchParams.get("event"));
@@ -131,20 +124,7 @@
               </div>
             </div>
           </div>
-          <div class="flex w-full justify-between px-24 py-6">
-            <div class="flex gap-4 items-center justify-center">
-              <img class="w-6 h-6" src="{curtains}" alt="Curtains">
-              <p><b>Зал:</b> {currentEvent.hall.name}</p>
-            </div>
-            <div class="flex gap-3 items-center justify-center">
-              <img class="w-6 h-6" src="{duration}" alt="Duration">
-              <p><b>Длительность:</b> {currentEvent.duration}</p>
-            </div>
-            <div class="flex gap-3 items-center justify-center">
-              <img class="w-6 h-6" src="{ruble}" alt="Curtains">
-              <p><b>Цена:</b> {currentEvent.price} руб.</p>
-            </div>
-          </div>
+          <EventInfoBar {...currentEvent} hall_name="{currentEvent.hall.name}" />
           <hr class="divider">
         {/if}
         <div class="description scrollbar-thin scrollbar-thumb-gray-300">
@@ -165,14 +145,13 @@
 <style lang="scss">
   #events-info {
     height: 72rem;
-    font-size: 16pt;
     @apply mt-6;
   }
 
   #events {
     height: 44rem;
     grid-template-columns: 1fr 1fr;
-    @apply grid grid-flow-col mb-6;
+    @apply grid grid-flow-col mb-9;
   }
 
   .divider {
@@ -190,16 +169,8 @@
     @apply pb-3;
 
     .info-text {
-      .author {
-        font-size: 14pt;
-      }
-
       .title {
         font-size: 24pt;
-      }
-
-      .genre {
-        font-size: 12pt
       }
     }
   }

@@ -143,7 +143,7 @@ a {
 
 .event-info {
   grid-template-columns: 3fr 0 2fr;
-  @apply grid grid-flow-col justify-between;
+  @apply grid grid-flow-col justify-between leading-tight;
 
   .info-text {
     .author {
@@ -163,14 +163,14 @@ a {
     }
 
     .age-limit {
-      font-size: 16pt;
+      font-size: 18pt;
       border: var(--accent) 4px solid;
       @apply font-bold px-1;
     }
   }
 
   .container {
-    @apply relative flex flex-col gap-2 px-6;
+    @apply relative flex flex-col gap-4 px-6;
   }
 
   .additional-info {

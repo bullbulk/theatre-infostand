@@ -10,9 +10,11 @@
   import { Modal } from "flowbite-svelte";
   import Autoclose from "$lib/components/Autoclose.svelte";
   import { page } from "$app/stores";
+  import EventInfoBar from "$lib/components/EventInfoBar.svelte";
 
   let autoScrollInterval;
   const startAutoscroll = () => {
+    return;
     if (autoScrollInterval == null) {
       autoScrollInterval = setInterval(() => {
         if (selected === $eventsData.dates.length - 1) {
@@ -119,8 +121,8 @@
     </div>
     {#key currentEvent.title}
       {#if currentEvent !== undefined}
-        <div class="event-info">
-          <div in:fade class="info-text container">
+        <div class="event-info mb-4">
+          <div class="info-text container">
             <div class="author">{currentEvent.author}</div>
             <div class="title">{currentEvent.title}</div>
             <div class="genre">{currentEvent.genre}</div>
@@ -132,34 +134,32 @@
             </div>
           </div>
           <hr class="vertical">
-          <div class="grid-auto-cols container">
-            <div class="additional-info pl-3">
-              <div><b>Зал:</b> {currentEvent.hall.name}</div>
-              <div><b>Длительность:</b> {currentEvent.duration}</div>
-              <div class="flex gap-2">
-                <div><b>Цена:</b> {currentEvent.price} руб.</div>
-                <!--<img class="w-7 h-7 m-0" src="{pushkin}" alt="Pushkin">-->
+          <div class="container justify-center">
+            <div class="additional-info px-3 flex items-center justify-between">
+              <div class="datetime">
+                <div class="date">{currentDate.date}</div>
+                <div class="weekday">{currentDate.weekday_full}</div>
+                <div class="time">{currentDate.time}</div>
               </div>
-              <div class="mt-4 flex">
+              <div class="buttons">
                 <a href="events/?event={currentEvent.id}">
-                  <button class="open-description">Подробнее</button>
+                  <button class="open-description rounded-t-md w-full">Подробнее</button>
                 </a>
-                {#if currentDate.buy_link}
-                  <button
-                    on:click={() => {showBuyWidget(currentDate.buy_link)}}
-                    class="buy m-0 flex items-center gap-2">
+                <button
+                  on:click={() => {showBuyWidget(currentDate.buy_link)}}
+                  class="buy m-0 flex items-center justify-center gap-2 w-full rounded-b-md">
                   <span>
                     <img class="w-4 h-4 m-0" src="{qr_icon}" alt="Pushkin">
                   </span>
-                    Купить билет
-                  </button>
-                {/if}
+                  Купить билет
+                </button>
               </div>
             </div>
           </div>
         </div>
       {/if}
     {/key}
+    <EventInfoBar {...currentEvent} hall_name="{currentEvent.hall.name}" />
     <Modal title="Покупка билета" size="xs" bind:open={showModal} autoclose>
       <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
         <div class="flex flex-col justify-center items-center gap-8">
@@ -186,25 +186,48 @@
   #upcoming-events {
     height: 58rem;
     grid-template-columns: 4fr 2fr;
-    @apply grid grid-flow-col mb-6;
+    @apply grid grid-flow-col mb-9;
   }
 
   #events-info {
     height: 72rem;
   }
 
-  button {
-    font-size: 12pt;
-    @apply rounded-lg px-5 py-2 mr-2 mb-2;
+  .buttons {
+    @apply flex flex-col w-40;
 
-    &.open-description {
-      color: black;
-      background-color: var(--accent);
+    button {
+      font-size: 12pt;
+      @apply px-4 py-2;
+
+      &.open-description {
+        color: black;
+        background-color: var(--accent);
+      }
+
+      &.buy {
+        color: white;
+        background-color: black;
+      }
     }
+  }
 
-    &.buy {
-      color: white;
-      background-color: black;
+  .additional-info {
+    .datetime {
+      @apply flex flex-col gap-1 items-center leading-tight;
+      .date {
+        font-size: 21pt;
+        @apply font-bold;
+      }
+
+      .weekday {
+        color: var(--text-accent);
+        font-size: 14pt;
+      }
+
+      .time {
+        font-size: 20pt;
+      }
     }
   }
 </style>
