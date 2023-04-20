@@ -17,6 +17,6 @@
   </div>
   <div class="flex gap-3 items-center justify-center">
     <img class="w-6 h-6" src="{ruble_img}" alt="Curtains">
-    <p><b>Цена:</b> {price} руб.</p>
+    <p><b>Цена:</b> {price}</p>
   </div>
 </div>
