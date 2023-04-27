@@ -5,7 +5,7 @@ export const eventsData = writable({
   events: [
     {
       id: 0, title: "", image: "", age_limit: "0+", duration: "",
-      hall: { name: "" }, dates: [], photos: []
+      hall: { name: "" }, dates: [], photos: [], pushkin_available: false
     }
   ],
   dates: [{

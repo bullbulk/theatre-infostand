@@ -97,7 +97,7 @@
               <div class="title">{currentEvent.title}</div>
               <div class="genre">{currentEvent.genre}</div>
               <div class="float-rt flex gap-4 mx-6">
-                {#if currentEvent.pushkinAvailable}
+                {#if currentEvent.pushkin_available}
                   <div class="w-10 h-10">
                     <img src="{pushkin}" alt="Pushkin">
                   </div>
