@@ -39,7 +39,7 @@
 
   const clickRow = (index) => {
     stopAutoscroll();
-    startAutoscroll();
+    // startAutoscroll();
     setSelected(index);
   };
 
@@ -123,12 +123,17 @@
         <div class="event-info mb-4">
           <div class="info-text container">
             <div class="author">{currentEvent.author}</div>
-            <div class="title">{currentEvent.title}</div>
+            <div class="title"
+                 class:shorten={() => {return currentEvent.author === ""}}>
+              {currentEvent.title}
+            </div>
             <div class="genre">{currentEvent.genre}</div>
             <div class="float-rt flex gap-4 mx-6">
-              <div class="w-10 h-10">
-                <img src="{pushkin}" alt="Pushkin">
-              </div>
+              {#if currentEvent.pushkinAvailable}
+                <div class="w-10 h-10">
+                  <img src="{pushkin}" alt="Pushkin">
+                </div>
+              {/if}
               <div class="age-limit">{currentEvent.age_limit}</div>
             </div>
           </div>
@@ -148,7 +153,7 @@
                   on:click={() => {showBuyWidget(currentDate.buy_link)}}
                   class="buy m-0 flex items-center justify-center gap-2 w-full rounded-b-md">
                   <span>
-                    <img class="w-4 h-4 m-0" src="{qr_icon}" alt="Pushkin">
+                    <img class="w-4 h-4 m-0" src="{qr_icon}" alt="QR code">
                   </span>
                   Купить билет
                 </button>
