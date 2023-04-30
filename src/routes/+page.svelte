@@ -39,7 +39,7 @@
 
   const clickRow = (index) => {
     stopAutoscroll();
-    // startAutoscroll();
+    startAutoscroll();
     setSelected(index);
   };
 
