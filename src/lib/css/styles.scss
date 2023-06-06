@@ -53,10 +53,6 @@ section {
 
   @apply w-full relative flex flex-col overflow-y-scroll;
 
-  & > * {
-    flex: 1;
-  }
-
   .row {
     @apply p-6 py-3;
   }

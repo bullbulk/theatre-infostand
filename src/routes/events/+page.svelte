@@ -126,7 +126,9 @@
               </div>
             </div>
           </div>
-          <EventInfoBar {...currentEvent} hall_name="{currentEvent.hall.name}" />
+          <EventInfoBar hall_name="{currentEvent.hall.name}"
+                        duration="{currentEvent.duration}"
+                        price="{currentEvent.price}" />
           <hr class="divider">
         {/if}
         <div class="description scrollbar-thin scrollbar-thumb-gray-300">

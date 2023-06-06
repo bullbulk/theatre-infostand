@@ -147,23 +147,30 @@
               </div>
               <div class="buttons">
                 <a href="events/?event={currentEvent.id}">
-                  <button class="open-description rounded-t-md w-full">Подробнее</button>
+                  <button class:rounded-md={() => {return currentDate.buy_link;}}
+                          class="open-description rounded-t-md w-full">
+                    Подробнее
+                  </button>
                 </a>
-                <button
-                  on:click={() => {showBuyWidget(currentDate.buy_link)}}
-                  class="buy m-0 flex items-center justify-center gap-2 w-full rounded-b-md">
+                {#if currentDate.buy_link}
+                  <button
+                    on:click={() => {showBuyWidget(currentDate.buy_link)}}
+                    class="buy m-0 flex items-center justify-center gap-2 w-full rounded-b-md">
                   <span>
                     <img class="w-4 h-4 m-0" src="{qr_icon}" alt="QR code">
                   </span>
-                  Купить билет
-                </button>
+                    Купить билет
+                  </button>
+                {/if}
               </div>
             </div>
           </div>
         </div>
       {/if}
     {/key}
-    <EventInfoBar {...currentEvent} hall_name="{currentEvent.hall.name}" />
+    <EventInfoBar hall_name="{currentEvent.hall.name}"
+                  duration="{currentEvent.duration}"
+                  price="{currentEvent.price}" />
     <Modal title="Покупка билета" size="xs" bind:open={showModal} autoclose>
       <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
         <div class="flex flex-col justify-center items-center gap-8">
