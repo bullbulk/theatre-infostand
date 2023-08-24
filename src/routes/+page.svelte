@@ -85,7 +85,7 @@
 
 <svelte:head>
   <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+  <meta content="Svelte demo app" name="description" />
 </svelte:head>
 
 <Header />
@@ -147,7 +147,7 @@
               </div>
               <div class="buttons">
                 <a href="events/?event={currentEvent.id}">
-                  <button class:rounded-md={() => {return currentDate.buy_link;}}
+                  <button class:rounded-md={currentDate.buy_link === ""}
                           class="open-description rounded-t-md w-full">
                     Подробнее
                   </button>
@@ -168,10 +168,10 @@
         </div>
       {/if}
     {/key}
-    <EventInfoBar hall_name="{currentEvent.hall.name}"
-                  duration="{currentEvent.duration}"
+    <EventInfoBar duration="{currentEvent.duration}"
+                  hall_name="{currentEvent.hall.name}"
                   price="{currentEvent.price}" />
-    <Modal title="Покупка билета" size="xs" bind:open={showModal} autoclose>
+    <Modal autoclose bind:open={showModal} size="xs" title="Покупка билета">
       <Autoclose closeTimeout={30000} onClose={() => showModal = false}>
         <div class="flex flex-col justify-center items-center gap-8">
           <p>Отсканируйте QR-код, чтобы перейти на страницу покупки
