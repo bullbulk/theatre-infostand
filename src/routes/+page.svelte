@@ -227,7 +227,7 @@
     .datetime {
       @apply flex flex-col gap-1 items-center leading-tight;
       .date {
-        font-size: 21pt;
+        font-size: 18pt;
         @apply font-bold;
       }
 

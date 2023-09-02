@@ -8,15 +8,15 @@
 
 <div class="infobar">
   <div class="gap-4">
-    <img class="w-6 h-6" src="{curtains_img}" alt="Curtains">
+    <img alt="Curtains" class="w-6 h-6" src="{curtains_img}">
     <p><b>Зал:</b> {hall_name}</p>
   </div>
   <div>
-    <img class="w-6 h-6" src="{duration_img}" alt="Duration">
+    <img alt="Duration" class="w-6 h-6" src="{duration_img}">
     <p><b>Длительность:</b> {duration}</p>
   </div>
   <div>
-    <img class="w-6 h-6" src="{ruble_img}" alt="Curtains">
+    <img alt="Curtains" class="w-6 h-6" src="{ruble_img}">
     <p><b>Цена:</b> {price}</p>
   </div>
 </div>
