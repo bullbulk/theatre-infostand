@@ -21,7 +21,7 @@
         } else {
           setSelected(selected + 1);
         }
-      }, 5 * 1000);
+      }, 10 * 1000);
     }
   };
   const stopAutoscroll = () => {
