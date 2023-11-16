@@ -167,6 +167,10 @@ a {
       border: var(--accent) 4px solid;
       @apply font-bold px-1;
     }
+
+    &.container {
+      @apply pr-20;
+    }
   }
 
   .container {

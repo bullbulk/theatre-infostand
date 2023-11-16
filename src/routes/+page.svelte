@@ -128,13 +128,13 @@
               {currentEvent.title}
             </div>
             <div class="genre">{currentEvent.genre}</div>
-            <div class="float-rt flex gap-4 mx-6">
+            <div class="float-rt flex flex-col items-center gap-5 mx-6">
+              <div class="age-limit">{currentEvent.age_limit}</div>
               {#if currentEvent.pushkin_available}
                 <div class="w-10 h-10">
                   <img src="{pushkin}" alt="Pushkin">
                 </div>
               {/if}
-              <div class="age-limit">{currentEvent.age_limit}</div>
             </div>
           </div>
           <hr class="vertical">
